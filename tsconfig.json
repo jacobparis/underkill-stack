@@ -1,0 +1,7 @@
+{
+  // I'm building an app that runs in the DOM with an external bundler
+  "extends": "@total-typescript/tsconfig/bundler/dom/app",
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  }
+}

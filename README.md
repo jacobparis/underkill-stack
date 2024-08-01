@@ -1,2 +1,3 @@
 # underkill-stack
-A remix stack for simple projects
+
+People keep telling me remix is overkill for small projects
