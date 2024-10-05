@@ -1,11 +1,12 @@
 # underkill-stack
 
-People keep telling me remix is overkill for small projects, but this file tree says otherwise. 
+People keep telling me ~~remix~~ react router is overkill for small projects, but this file tree says otherwise.
 
 ```
 ├── README .md
 ├── app
 │   ├── root.tsx
+│   ├── routes.ts
 │   └── tailwind.css
 ├── package-lock.json
 ├── package.json
@@ -13,6 +14,7 @@ People keep telling me remix is overkill for small projects, but this file tree 
 └── vite.config.js
 ```
 
-- Remix + Vite
+- React Router (vite plugin)
+- React 19
 - Typescript
-- Tailwind (vite plugin)
+- Tailwind 4 (vite plugin)

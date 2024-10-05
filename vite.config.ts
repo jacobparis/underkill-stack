@@ -1,10 +1,10 @@
-import { vitePlugin as remix } from "@remix-run/dev"
-import tailwind from "@tailwindcss/vite"
-import { defineConfig } from "vite"
+import { reactRouter } from "@react-router/dev/vite";
+import tailwind from "@tailwindcss/vite";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [
-    remix(),
+    reactRouter(),
     tailwind({
       content: ["./app/**/*.{js,jsx,ts,tsx}"],
       theme: {
@@ -13,4 +13,4 @@ export default defineConfig({
       plugins: [],
     }),
   ],
-})
+});

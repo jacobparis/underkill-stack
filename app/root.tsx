@@ -1,5 +1,5 @@
-import { Links, Meta, Outlet, Scripts } from "@remix-run/react"
-import "#app/tailwind.css"
+import { Links, Meta, Outlet, Scripts } from "react-router";
+import "#app/tailwind.css";
 
 export default function App() {
   return (
@@ -17,5 +17,5 @@ export default function App() {
         <Scripts />
       </body>
     </html>
-  )
+  );
 }

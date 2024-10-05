@@ -1,8 +1,18 @@
 {
   // I'm building an app that runs in the DOM with an external bundler
   "extends": "@total-typescript/tsconfig/bundler/dom/app",
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/.server/**/*.ts",
+    "**/.server/**/*.tsx",
+    "**/.client/**/*.ts",
+    "**/.client/**/*.tsx",
+    ".react-router/types/**/*"
+  ],
   "compilerOptions": {
     "jsx": "react-jsx",
-    "types": ["vite/client", "@remix-run/node"]
+    "types": ["@react-router/node", "vite/client"],
+    "plugins": [{ "name": "@react-router/dev" }]
   }
 }
