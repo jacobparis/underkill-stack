@@ -45,9 +45,9 @@
     "vite": "^5.3.5"
   },
   "overrides": {
-    "@types/react": "npm:types-react@rc",
-    "@types/react-dom": "npm:types-react-dom@rc",
-    "react": "19.0.0-rc-1460d67c-20241003",
-    "react-dom": "19.0.0-rc-1460d67c-20241003"
+    "@types/react": "$@types/react",
+    "@types/react-dom": "$@types/react-dom",
+    "react": "$react",
+    "react-dom": "$react-dom"
   }
 }
