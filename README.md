@@ -8,7 +8,6 @@ People keep telling me ~~remix~~ react router is overkill for small projects, bu
 │   ├── root.tsx
 │   ├── routes.ts
 │   └── tailwind.css
-├── package-lock.json
 ├── package.json
 ├── tsconfig.json
 └── vite.config.js
@@ -18,3 +17,4 @@ People keep telling me ~~remix~~ react router is overkill for small projects, bu
 - React 19
 - Typescript
 - Tailwind 4 (vite plugin)
+
