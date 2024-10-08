@@ -3,14 +3,14 @@
 People keep telling me ~~remix~~ react router is overkill for small projects, but this file tree says otherwise.
 
 ```
-├── README .md
+├── README.md
 ├── app
 │   ├── root.tsx
 │   ├── routes.ts
 │   └── tailwind.css
 ├── package.json
 ├── tsconfig.json
-└── vite.config.js
+└── vite.config.ts
 ```
 
 - React Router (vite plugin)
