@@ -40,6 +40,7 @@
     "@react-router/dev": "^7.0.0-pre.0",
     "@total-typescript/tsconfig": "^1.0.4",
     "tailwindcss": "^4.0.0-alpha.26",
+    "typescript": "^5.6.2",
     "vite": "^5.3.5"
   },
   "overrides": {
