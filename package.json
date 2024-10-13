@@ -8,6 +8,7 @@
     "#*": "./*"
   },
   "scripts": {
+    "postinstall": "patch-package",
     "dev": "react-router dev",
     "build": "react-router build",
     "start": "NODE_ENV=production react-router-serve ./build/server/index.js"
@@ -29,6 +30,7 @@
     "@react-router/node": "^7.0.0-pre.0",
     "@react-router/serve": "^7.0.0-pre.0",
     "@tailwindcss/vite": "^4.0.0-alpha.26",
+    "@vercel/remix-builder": "^2.2.12",
     "@vercel/static-config": "^3.0.0",
     "isbot": "^5.1.17",
     "react": "19.0.0-rc-1460d67c-20241003",

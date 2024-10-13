@@ -1,0 +1,213 @@
+diff --git a/node_modules/@vercel/remix-builder/defaults/entry.client.react.jsx b/node_modules/@vercel/remix-builder/defaults/entry.client.react.jsx
+index afdfc0c..08ab4ec 100644
+--- a/node_modules/@vercel/remix-builder/defaults/entry.client.react.jsx
++++ b/node_modules/@vercel/remix-builder/defaults/entry.client.react.jsx
+@@ -1,12 +1,12 @@
+-import { RemixBrowser } from '@remix-run/react';
+-import { startTransition, StrictMode } from 'react';
+-import { hydrateRoot } from 'react-dom/client';
++import { startTransition, StrictMode } from "react";
++import { hydrateRoot } from "react-dom/client";
++import { HydratedRouter } from "react-router/dom";
+ 
+ startTransition(() => {
+   hydrateRoot(
+     document,
+     <StrictMode>
+-      <RemixBrowser />
++      <HydratedRouter />
+     </StrictMode>
+   );
+ });
+diff --git a/node_modules/@vercel/remix-builder/defaults/entry.server.jsx b/node_modules/@vercel/remix-builder/defaults/entry.server.jsx
+index 4436bc3..bffa8aa 100644
+--- a/node_modules/@vercel/remix-builder/defaults/entry.server.jsx
++++ b/node_modules/@vercel/remix-builder/defaults/entry.server.jsx
+@@ -1,17 +1,70 @@
+-import { RemixServer } from '@remix-run/react';
+-import { handleRequest } from '@vercel/remix';
+-
+-export default function (
+-  request,
+-  responseStatusCode,
+-  responseHeaders,
+-  remixContext
++import { PassThrough } from "node:stream";
++
++import type { AppLoadContext, EntryContext } from "react-router";
++import { createReadableStreamFromReadable } from "@react-router/node";
++import { ServerRouter } from "react-router";
++import { isbot } from "isbot";
++import type { RenderToPipeableStreamOptions } from "react-dom/server";
++import { renderToPipeableStream } from "react-dom/server";
++
++const ABORT_DELAY = 5_000;
++
++export default function handleRequest(
++  request: Request,
++  responseStatusCode: number,
++  responseHeaders: Headers,
++  routerContext: EntryContext,
++  loadContext: AppLoadContext
+ ) {
+-  const remixServer = <RemixServer context={remixContext} url={request.url} />;
+-  return handleRequest(
+-    request,
+-    responseStatusCode,
+-    responseHeaders,
+-    remixServer
+-  );
++  return new Promise((resolve, reject) => {
++    let shellRendered = false;
++    let userAgent = request.headers.get("user-agent");
++
++    // Ensure requests from bots and SPA Mode renders wait for all content to load before responding
++    // https://react.dev/reference/react-dom/server/renderToPipeableStream#waiting-for-all-content-to-load-for-crawlers-and-static-generation
++    let readyOption: keyof RenderToPipeableStreamOptions =
++      (userAgent && isbot(userAgent)) || routerContext.isSpaMode
++        ? "onAllReady"
++        : "onShellReady";
++
++    const { pipe, abort } = renderToPipeableStream(
++      <ServerRouter
++        context={routerContext}
++        url={request.url}
++        abortDelay={ABORT_DELAY}
++      />,
++      {
++        [readyOption]() {
++          shellRendered = true;
++          const body = new PassThrough();
++          const stream = createReadableStreamFromReadable(body);
++
++          responseHeaders.set("Content-Type", "text/html");
++
++          resolve(
++            new Response(stream, {
++              headers: responseHeaders,
++              status: responseStatusCode,
++            })
++          );
++
++          pipe(body);
++        },
++        onShellError(error: unknown) {
++          reject(error);
++        },
++        onError(error: unknown) {
++          responseStatusCode = 500;
++          // Log streaming rendering errors from inside the shell.  Don't log
++          // errors encountered during initial shell rendering since they'll
++          // reject and get logged in handleDocumentRequest.
++          if (shellRendered) {
++            console.error(error);
++          }
++        },
++      }
++    );
++
++    setTimeout(abort, ABORT_DELAY);
++  });
+ }
+diff --git a/node_modules/@vercel/remix-builder/defaults/server-edge.mjs b/node_modules/@vercel/remix-builder/defaults/server-edge.mjs
+index e7ae5ff..041894b 100644
+--- a/node_modules/@vercel/remix-builder/defaults/server-edge.mjs
++++ b/node_modules/@vercel/remix-builder/defaults/server-edge.mjs
+@@ -1,3 +1,3 @@
+-import { createRequestHandler } from '@remix-run/server-runtime';
+-import * as build from '@remix-run/dev/server-build';
++import { createRequestHandler } from 'react-router';
++import * as build from 'react-router/server-build';
+ export default createRequestHandler(build.default || build);
+diff --git a/node_modules/@vercel/remix-builder/defaults/server-node.mjs b/node_modules/@vercel/remix-builder/defaults/server-node.mjs
+index c16e3a8..6b3e9ac 100644
+--- a/node_modules/@vercel/remix-builder/defaults/server-node.mjs
++++ b/node_modules/@vercel/remix-builder/defaults/server-node.mjs
+@@ -3,8 +3,8 @@ import {
+   createReadableStreamFromReadable,
+   writeReadableStreamToWritable,
+   installGlobals,
+-} from '@remix-run/node';
+-import * as build from '@remix-run/dev/server-build';
++} from '@react-router/node';
++import * as build from '@react-router/dev/server-build';
+ 
+ installGlobals({
+   nativeFetch:
+diff --git a/node_modules/@vercel/remix-builder/dist/index.js b/node_modules/@vercel/remix-builder/dist/index.js
+index 2650d19..1fd5cce 100644
+--- a/node_modules/@vercel/remix-builder/dist/index.js
++++ b/node_modules/@vercel/remix-builder/dist/index.js
+@@ -3067,7 +3067,7 @@ function hasScript(scriptName, pkg) {
+   return typeof scripts[scriptName] === "string";
+ }
+ async function getRemixVersion(dir, base) {
+-  const resolvedPath = require_.resolve("@remix-run/dev", { paths: [dir] });
++  const resolvedPath = require_.resolve("@react-router/dev", { paths: [dir] });
+   const pkgPath = await (0, import_build_utils2.walkParentDirs)({
+     base,
+     start: (0, import_path.dirname)(resolvedPath),
+@@ -3075,7 +3075,7 @@ async function getRemixVersion(dir, base) {
+   });
+   if (!pkgPath) {
+     throw new Error(
+-      `Failed to find \`package.json\` file for "@remix-run/dev"`
++      `Failed to find \`package.json\` file for "@react-router/dev"`
+     );
+   }
+   const { version: version2 } = JSON.parse(
+@@ -3111,9 +3111,6 @@ function isVite(dir) {
+   ]);
+   if (!viteConfig)
+     return false;
+-  const remixConfig = findConfig(dir, "remix.config");
+-  if (!remixConfig)
+-    return true;
+   const pkg = JSON.parse(
+     (0, import_fs.readFileSync)((0, import_path.join)(dir, "package.json"), "utf8")
+   );
+@@ -3121,7 +3118,7 @@ function isVite(dir) {
+     return true;
+   }
+   const viteConfigContents = (0, import_fs.readFileSync)(viteConfig, "utf8");
+-  if (/['"]@remix-run\/dev['"]/.test(viteConfigContents)) {
++  if (/['"]@react-router\/dev\/vite['"]/.test(viteConfigContents)) {
+     return true;
+   }
+   return false;
+@@ -3358,7 +3355,7 @@ async function createRenderNodeFunction(nodeVersion, entrypointDir, rootDir, ser
+     base: rootDir,
+     processCwd: entrypointDir
+   });
+-  logNftWarnings(trace.warnings, "@remix-run/node");
++  logNftWarnings(trace.warnings, "react-router");
+   for (const file of trace.fileList) {
+     files[file] = await import_build_utils3.FileFsRef.fromFsPath({ fsPath: (0, import_path2.join)(rootDir, file) });
+   }
+@@ -3529,7 +3526,7 @@ ${updatedCodeString}`;
+ var remixBuilderPkg = JSON.parse(
+   (0, import_fs3.readFileSync)((0, import_path4.join)(__dirname, "../package.json"), "utf8")
+ );
+-var remixRunDevForkVersion = remixBuilderPkg.devDependencies["@remix-run/dev"];
++var remixRunDevForkVersion = remixBuilderPkg.devDependencies["@react-router/dev"];
+ var DEFAULTS_PATH2 = (0, import_path4.join)(__dirname, "../defaults");
+ var edgeServerSrcPromise2 = import_fs3.promises.readFile(
+   (0, import_path4.join)(DEFAULTS_PATH2, "server-edge.mjs"),
+@@ -3848,7 +3845,7 @@ module.exports = config;`;
+       repoRootPath,
+       "@remix-run/server-runtime"
+     ),
+-    !isHydrogen2 ? ensureResolvable(entrypointFsDirname, repoRootPath, "@remix-run/node") : null
++    !isHydrogen2 ? ensureResolvable(entrypointFsDirname, repoRootPath, "react-router") : null
+   ]);
+   const staticDir = (0, import_path4.join)(entrypointFsDirname, "public");
+   const serverBundlesRespected = (0, import_fs3.existsSync)(
+@@ -4038,7 +4035,7 @@ async function createRenderEdgeFunction2(entrypointDir, rootDir, serverBuildPath
+         const pkgJson = JSON.parse(source.toString());
+         if (pkgJson.name === "@remix-run/vercel") {
+           pkgJson.browser = "dist/edge.js";
+-          pkgJson.dependencies["@remix-run/server-runtime"] = pkgJson.dependencies["@remix-run/node"];
++          pkgJson.dependencies["@remix-run/server-runtime"] = pkgJson.dependencies["react-router"];
+           if (!remixRunVercelPkgJson) {
+             remixRunVercelPkgJson = JSON.stringify(pkgJson, null, 2) + "\n";
+             const vercelEdgeEntrypointPath = (0, import_path4.join)(
