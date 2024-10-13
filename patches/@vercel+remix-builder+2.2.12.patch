@@ -135,7 +135,7 @@ index c16e3a8..6b3e9ac 100644
  installGlobals({
    nativeFetch:
 diff --git a/node_modules/@vercel/remix-builder/dist/index.js b/node_modules/@vercel/remix-builder/dist/index.js
-index 2650d19..1fd5cce 100644
+index 2650d19..ac3cc7b 100644
 --- a/node_modules/@vercel/remix-builder/dist/index.js
 +++ b/node_modules/@vercel/remix-builder/dist/index.js
 @@ -3067,7 +3067,7 @@ function hasScript(scriptName, pkg) {
@@ -175,6 +175,15 @@ index 2650d19..1fd5cce 100644
      return true;
    }
    return false;
+@@ -3349,7 +3346,7 @@ async function createRenderNodeFunction(nodeVersion, entrypointDir, rootDir, ser
+     await import_fs2.promises.writeFile(
+       handlerPath,
+       nodeServerSrc.replace(
+-        "@remix-run/dev/server-build",
++        "@react-router/dev/server-build",
+         `./${baseServerBuildPath}.js`
+       )
+     );
 @@ -3358,7 +3355,7 @@ async function createRenderNodeFunction(nodeVersion, entrypointDir, rootDir, ser
      base: rootDir,
      processCwd: entrypointDir
@@ -184,6 +193,15 @@ index 2650d19..1fd5cce 100644
    for (const file of trace.fileList) {
      files[file] = await import_build_utils3.FileFsRef.fromFsPath({ fsPath: (0, import_path2.join)(rootDir, file) });
    }
+@@ -3392,7 +3389,7 @@ async function createRenderEdgeFunction(entrypointDir, rootDir, serverBuildPath,
+     await import_fs2.promises.writeFile(
+       handlerPath,
+       edgeServerSrc.replace(
+-        "@remix-run/dev/server-build",
++        "@react-router/dev/server-build",
+         `./${baseServerBuildPath}.js`
+       )
+     );
 @@ -3529,7 +3526,7 @@ ${updatedCodeString}`;
  var remixBuilderPkg = JSON.parse(
    (0, import_fs3.readFileSync)((0, import_path4.join)(__dirname, "../package.json"), "utf8")
@@ -193,6 +211,39 @@ index 2650d19..1fd5cce 100644
  var DEFAULTS_PATH2 = (0, import_path4.join)(__dirname, "../defaults");
  var edgeServerSrcPromise2 = import_fs3.promises.readFile(
    (0, import_path4.join)(DEFAULTS_PATH2, "server-edge.mjs"),
+@@ -3609,7 +3606,7 @@ var build2 = async ({
+   const remixRunDevPath = await ensureResolvable(
+     entrypointFsDirname,
+     repoRootPath,
+-    "@remix-run/dev"
++    "@react-router/dev"
+   );
+   const remixRunDevPkg = JSON.parse(
+     (0, import_fs3.readFileSync)((0, import_path4.join)(remixRunDevPath, "package.json"), "utf8")
+@@ -3623,7 +3620,7 @@ var build2 = async ({
+   const { serverEntryPoint, appDirectory } = remixConfig;
+   const remixRoutes = Object.values(remixConfig.routes);
+   let depsModified = false;
+-  const remixRunDevPkgVersion = pkg.dependencies?.["@remix-run/dev"] || pkg.devDependencies?.["@remix-run/dev"];
++  const remixRunDevPkgVersion = pkg.dependencies?.["@react-router/dev"] || pkg.devDependencies?.["@react-router/dev"];
+   const serverBundlesMap = /* @__PURE__ */ new Map();
+   const resolvedConfigsMap = /* @__PURE__ */ new Map();
+   const project = new import_ts_morph2.Project();
+@@ -3684,11 +3681,11 @@ var build2 = async ({
+       REMIX_RUN_DEV_MAX_VERSION,
+       remixVersion
+     );
+-    if (pkg.devDependencies["@remix-run/dev"]) {
+-      delete pkg.devDependencies["@remix-run/dev"];
++    if (pkg.devDependencies["@react-router/dev"]) {
++      delete pkg.devDependencies["@react-router/dev"];
+       pkg.devDependencies["@vercel/remix-run-dev"] = remixDevForkVersion;
+     } else {
+-      delete pkg.dependencies["@remix-run/dev"];
++      delete pkg.dependencies["@react-router/dev"];
+       pkg.dependencies["@vercel/remix-run-dev"] = remixDevForkVersion;
+     }
+     depsModified = true;
 @@ -3848,7 +3845,7 @@ module.exports = config;`;
        repoRootPath,
        "@remix-run/server-runtime"
@@ -202,6 +253,24 @@ index 2650d19..1fd5cce 100644
    ]);
    const staticDir = (0, import_path4.join)(entrypointFsDirname, "public");
    const serverBundlesRespected = (0, import_fs3.existsSync)(
+@@ -3967,7 +3964,7 @@ async function createRenderNodeFunction2(nodeVersion, entrypointDir, rootDir, se
+     await writeEntrypointFile(
+       handlerPath,
+       nodeServerSrc.replace(
+-        "@remix-run/dev/server-build",
++        "@react-router/dev/server-build",
+         `./${baseServerBuildPath}.js`
+       ),
+       rootDir
+@@ -4013,7 +4010,7 @@ async function createRenderEdgeFunction2(entrypointDir, rootDir, serverBuildPath
+     await writeEntrypointFile(
+       handlerPath,
+       edgeServerSrc.replace(
+-        "@remix-run/dev/server-build",
++        "@react-router/dev/server-build",
+         `./${baseServerBuildPath}.js`
+       ),
+       rootDir
 @@ -4038,7 +4035,7 @@ async function createRenderEdgeFunction2(entrypointDir, rootDir, serverBuildPath
          const pkgJson = JSON.parse(source.toString());
          if (pkgJson.name === "@remix-run/vercel") {
@@ -211,3 +280,12 @@ index 2650d19..1fd5cce 100644
            if (!remixRunVercelPkgJson) {
              remixRunVercelPkgJson = JSON.stringify(pkgJson, null, 2) + "\n";
              const vercelEdgeEntrypointPath = (0, import_path4.join)(
+@@ -4139,7 +4136,7 @@ var prepareCache = async ({
+     );
+     const packageJsonPath = (0, import_path5.join)(entrypointFsDirname, "package.json");
+     const remixRunDevPath = (0, import_path5.dirname)(
+-      require_.resolve("@remix-run/dev/package.json", {
++      require_.resolve("@react-router/dev/package.json", {
+         paths: [entrypointFsDirname]
+       })
+     );
