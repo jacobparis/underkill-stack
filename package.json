@@ -29,16 +29,17 @@
     "@react-router/node": "^7.0.0-pre.0",
     "@react-router/serve": "^7.0.0-pre.0",
     "@tailwindcss/vite": "^4.0.0-alpha.26",
+    "@vercel/static-config": "^3.0.0",
     "isbot": "^5.1.17",
     "react": "19.0.0-rc-1460d67c-20241003",
     "react-dom": "19.0.0-rc-1460d67c-20241003",
     "react-router": "^7.0.0-pre.0"
   },
   "devDependencies": {
-    "@types/react": "npm:types-react@rc",
-    "@types/react-dom": "npm:types-react-dom@rc",
     "@react-router/dev": "^7.0.0-pre.0",
     "@total-typescript/tsconfig": "^1.0.4",
+    "@types/react": "npm:types-react@rc",
+    "@types/react-dom": "npm:types-react-dom@rc",
     "tailwindcss": "^4.0.0-alpha.26",
     "typescript": "^5.6.2",
     "vite": "^5.3.5"
