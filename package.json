@@ -8,9 +8,7 @@
     "#*": "./*"
   },
   "scripts": {
-    "dev": "run-p dev:*",
-    "dev:react-router": "react-router dev",
-    "dev:typegen": "react-router typegen --watch",
+    "dev": "react-router dev",
     "build": "react-router build",
     "start": "NODE_ENV=production react-router-serve ./build/server/index.js"
   },
@@ -28,16 +26,16 @@
   },
   "homepage": "https://github.com/jacobparis/underkill-stack#readme",
   "dependencies": {
-    "@react-router/node": "^7.0.0-pre.5",
-    "@react-router/serve": "^7.0.0-pre.5",
+    "@react-router/node": "^7.0.1",
+    "@react-router/serve": "^7.0.1",
     "@tailwindcss/vite": "^4.0.0-alpha.26",
     "isbot": "^5.1.17",
     "react": "19.0.0-rc-1460d67c-20241003",
     "react-dom": "19.0.0-rc-1460d67c-20241003",
-    "react-router": "^7.0.0-pre.5"
+    "react-router": "^7.0.1"
   },
   "devDependencies": {
-    "@react-router/dev": "^7.0.0-pre.5",
+    "@react-router/dev": "^7.0.1",
     "@total-typescript/tsconfig": "^1.0.4",
     "@types/react": "npm:types-react@rc",
     "@types/react-dom": "npm:types-react-dom@rc",
