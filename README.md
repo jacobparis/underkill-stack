@@ -10,7 +10,7 @@ People keep telling me ~~remix~~ react router is overkill for small projects, bu
 │   └── tailwind.css
 ├── package.json
 ├── tsconfig.json
-├── vite.config.ts
+└── vite.config.ts
 ```
 
 - React Router (vite plugin)
