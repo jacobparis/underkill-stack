@@ -1,3 +1,5 @@
 import type { RouteConfig } from "@react-router/dev/routes";
 
-export const routes: RouteConfig = [];
+const routes: RouteConfig = [];
+
+export default routes;
