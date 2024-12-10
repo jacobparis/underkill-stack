@@ -26,28 +26,22 @@
   },
   "homepage": "https://github.com/jacobparis/underkill-stack#readme",
   "dependencies": {
-    "@react-router/node": "^7.0.1",
-    "@react-router/serve": "^7.0.1",
-    "@tailwindcss/vite": "^4.0.0-alpha.26",
+    "@react-router/node": "^7.0.2",
+    "@react-router/serve": "^7.0.2",
+    "@tailwindcss/vite": "^4.0.0-beta.6",
     "isbot": "^5.1.17",
-    "react": "19.0.0-rc.1",
-    "react-dom": "19.0.0-rc.1",
-    "react-router": "^7.0.1"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router": "^7.0.2"
   },
   "devDependencies": {
-    "@react-router/dev": "^7.0.1",
+    "@react-router/dev": "^7.0.2",
     "@total-typescript/tsconfig": "^1.0.4",
-    "@types/react": "npm:types-react@rc",
-    "@types/react-dom": "npm:types-react-dom@rc",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.2",
     "npm-run-all": "^4.1.5",
-    "tailwindcss": "^4.0.0-alpha.26",
-    "typescript": "^5.6.2",
-    "vite": "^5.3.5"
-  },
-  "overrides": {
-    "@types/react": "npm:types-react@rc",
-    "@types/react-dom": "npm:types-react-dom@rc",
-    "react": "19.0.0-rc.1",
-    "react-dom": "19.0.0-rc.1"
+    "tailwindcss": "^4.0.0-beta.6",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11"
   }
 }
